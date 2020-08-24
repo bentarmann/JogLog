@@ -76,7 +76,7 @@ public class StatsFragment extends Fragment {
                 if (currentYear == comparedYear && currentWeek == comparedWeek) {
                     weeklyMileTotal += logs.get(i).getDistance();
                 } else {
-                    break;
+                    continue;
                 }
             }
         }
@@ -127,12 +127,18 @@ public class StatsFragment extends Fragment {
      */
     private static double[] computeFastestPace(ArrayList<Log> logs) {
         double[] fastestPace = new double[2];
+        fastestPace[0] = Double.POSITIVE_INFINITY;
 
         for (Log currentLog : logs) {
-            if (currentLog.getMilePace() > fastestPace[0]) {
+            if (currentLog.getMilePace() < fastestPace[0]) {
                 fastestPace[0] = currentLog.getMilePace();
                 fastestPace[1] = currentLog.getDistance();
             }
+        }
+
+        // for case where no fastest pace is found, set the pace to 0.0 for display purposes
+        if (Double.compare(fastestPace[0], Double.POSITIVE_INFINITY) == 0) {
+            fastestPace[0] = 0.0;
         }
 
         return fastestPace;
